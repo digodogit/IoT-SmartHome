@@ -1,4 +1,4 @@
-#IoT - Smart Home: 
+# IoT - Smart Home: 
 - Projeto com o foco em desenvolver uma aplicação (para web, por enquanto) completa de automação para residências.
 
 - Funções previstas da aplicação:
