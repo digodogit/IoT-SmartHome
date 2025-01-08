@@ -1,0 +1,30 @@
+interface DispCardProps {
+  key: number;
+  item: DispType;
+}
+
+export function DispCard({ key, item }: Readonly<DispCardProps>) {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+  };
+  return (
+    <DropdownList className="p-4 border ">
+      <DropdownItem key={key}>
+        <DropdownButton onClick={handleClick}>{item.name}</DropdownButton>
+
+        {isOpen && item.components ? (
+          <DropdownList className=" p-4 border">
+            {item.components.map((comp, index) => {
+              return (
+                <DropdownItem key={index}>
+                  <DropdownButton>{comp}</DropdownButton>
+                </DropdownItem>
+              );
+            })}
+          </DropdownList>
+        ) : null}
+      </DropdownItem>
+    </DropdownList>
+  );
+}

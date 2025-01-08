@@ -1,18 +1,20 @@
-# IoT - Smart Home: 
+# IoT - Smart Home:
+
 - Projeto com o foco em desenvolver uma aplicação (para web, por enquanto) completa de automação para residências.
 
 - Funções previstas da aplicação:
+
   - Gerenciamento de dispositivos domêsticos, como luzes, eletrodomêsticos, câmeras, sons, entre outros.
   - Monitoramento e controle de consumos de energia, tempo consumindo, etc. para cada dispositivo.
   - Criação de rotinas para maior personalização.
   - outras funções a serem pensadas...
 
-
 - Ferramentas/serviços:
   - Node.js
   - Express.js
-  - React.js
+  - Next.js
   - MongoDB e Redis (por enquanto)
+  - Zod
   - npm
   - Figma
   - Docker
@@ -24,9 +26,9 @@
     - ferramentas de CI/CD.
     - microcontroladores e sensores.
     - câmeras.
-    
-
 
 ### Objetivo do projeto é mais para aprendizado e desenvolvimento pessoal.
+
 ### Conforme eu for atualizando, irei adicionando mais especificações e conteúdos presentes no projeto.
+
 ### Por ser algo pessoal, não há data limite para ser "lançado".
