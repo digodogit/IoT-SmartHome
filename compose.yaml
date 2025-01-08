@@ -1,0 +1,50 @@
+services:
+  frontend-next:
+    build:
+      context: frontend
+    ports:
+      - 3000:3000
+    stdin_open: true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    restart: always
+    networks:
+      - next-express
+    depends_on:
+      - backend-express
+
+  backend-express:
+    restart: always
+    build:
+      context: backend
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongoDB
+    networks:
+      - express-mongoDB
+      - next-express
+    ports:
+      - 3001:3001
+
+  mongoDB:
+    restart: always
+    image: mongodb/mongodb-community-server:7.0.16-ubuntu2204
+    volumes:
+      - mongoDB_data:/data/db
+    networks:
+      - express-mongoDB
+    expose:
+      - 27017
+
+networks:
+  next-express:
+    driver: bridge
+  express-mongoDB:
+    driver: bridge
+
+volumes:
+  mongoDB_data:
+    driver: local

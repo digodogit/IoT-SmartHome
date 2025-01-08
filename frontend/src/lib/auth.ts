@@ -33,7 +33,7 @@ const providers: Provider[] = [
 		authorize: async (credentials): Promise<null | User> => {
 			if (credentials === null) return null;
 			try {
-				const res = await axios.post('http://localhost:3001/api/auth/login', {
+				const res = await axios.post('http://backend-express:3001/api/auth/login', {
 					email: credentials?.email,
 					password: credentials.password,
 				});
