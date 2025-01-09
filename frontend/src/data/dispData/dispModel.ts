@@ -1,29 +1,28 @@
 import { ReactNode, Dispatch, SetStateAction } from 'react';
 
 export type DispType = {
-	id: string | null;
+	_id: string | null;
 	name: string;
 	category: string;
 	element?: ReactNode;
 	state?: string;
 	path?: string;
 	favDisp?: boolean;
-	dispProps?: {
-		components: DispCompType[];
-		icon?: ReactNode;
-	};
+	userId?: string;
+	components: { component: DispCompType }[];
 };
 
-export type DispCompType = {
-	name?: string;
-	style?: 'switch' | 'slider' | 'rgb';
-	type?: unknown;
-};
+export interface DispCompType {
+	name: string;
+	style: 'switch' | 'slider' | 'rgb';
+	type: unknown;
+}
 
 export type DispSchema = {
-	id: string | null;
 	name: string;
 	category: string;
+	favDisp: boolean;
+	userId?: string;
 };
 
 export interface DispTypeProps<DispType> {

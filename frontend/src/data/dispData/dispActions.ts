@@ -16,10 +16,20 @@ async function deleteDisp(dispId: unknown) {
 	//fazer check para saber se pode editar é uma boa
 }
 
-export async function addDisp(disp: unknown) {
+export async function createDisp(disp: unknown) {
 	try {
 		const session = await checkAuth();
-		console.log(disp);
+		const headers = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${session?.accessToken}`,
+			},
+			body: JSON.stringify(disp),
+		};
+		const res = await fetch('http://localhost:3001/dispositivos/createDisp', headers);
+		const data = await res.json();
+		console.log(data);
 	} catch (error) {
 		console.log('nao sei');
 		return error;

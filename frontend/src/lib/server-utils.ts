@@ -11,30 +11,29 @@ export async function checkAuth() {
 	return session;
 }
 
-async function fetchServerData(path?: string, method?: string, payload?: any) {
+async function fetchServerData(path?: string, method?: string, payload?: unknown) {
 	const session = await checkAuth();
 
-	return session;
-	/* const options = {
-    method: method || 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session?.accessToken}`
-    }
-  };
+	const options = {
+		method: method || 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${session?.accessToken}`,
+		},
+	};
 
-  try {
-    const res = await fetch(`http://localhost:3001${path}`, options);
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.log(error); 
-  }*/
+	try {
+		const res = await fetch(`http://backend-express:3001${path}`, options);
+		const data = await res.json();
+		return data;
+	} catch (error) {
+		console.log(error);
+	}
 }
 export async function getAllUserDisp() {
-	const response = await fetchServerData('/api/user/allDisp', 'GET');
-
-	return response;
+	const response = await fetchServerData('/dispositivos/allDisp', 'GET');
+	console.log(response.disps);
+	return response.disps;
 	//headers
 	// data
 	// //method

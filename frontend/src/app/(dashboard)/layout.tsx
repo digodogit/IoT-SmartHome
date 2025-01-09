@@ -7,6 +7,7 @@ import Footer from '@/components/custom/footer';
 import { baseRoutes } from '@/data/pathRoutes/baseRoutes';
 import { dispTest } from '@/data/dispData/dispDataTest';
 import DevicesContextProvider from '@/contexts/items-context-provider';
+import { getAllUserDisp } from '@/lib/server-utils';
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
 	return (
@@ -20,7 +21,9 @@ export default async function Layout({ children }: { children: React.ReactNode }
 					<Header />
 				</section>
 				<div className="flex-1 self-stretch h-auto ">
-					<DevicesContextProvider devices={dispTest}>{children}</DevicesContextProvider>
+					<DevicesContextProvider devices={await getAllUserDisp()}>
+						{children}
+					</DevicesContextProvider>
 				</div>
 				<section className="flex-initial min-h-[150px] h-32">
 					<Footer />

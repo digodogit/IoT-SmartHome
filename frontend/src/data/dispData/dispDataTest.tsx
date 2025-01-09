@@ -2,68 +2,58 @@ import { DispType } from './dispModel';
 
 export const dispTest: DispType[] = [
 	{
-		id: '11',
+		_id: '11',
 		name: 'Lampada 1',
 		category: 'lampada',
 		favDisp: false,
-		dispProps: {
-			components: [
-				{ name: 'liga', style: 'switch', type: false },
-				{ name: 'intesidade', style: 'slider', type: 0 },
-				{ name: 'cores', style: 'rgb', type: 'blue' },
-			],
-		},
+		components: [
+			{ component: { name: 'liga', style: 'switch', type: false } },
+			{ component: { name: 'intesidade', style: 'slider', type: 0 } },
+			{ component: { name: 'cores', style: 'rgb', type: 'white' } },
+		],
 	},
 	{
-		id: '22',
+		_id: '22',
 		name: 'Lampada 2',
 		category: 'lampada',
 		favDisp: false,
-		dispProps: {
-			components: [
-				{ name: 'liga', style: 'switch', type: false },
-				{ name: 'intesidade', style: 'slider', type: 0 },
-				{ name: 'cores', style: 'rgb', type: 'green' },
-			],
-		},
+		components: [
+			{ component: { name: 'liga', style: 'switch', type: false } },
+			{ component: { name: 'intesidade', style: 'slider', type: 0 } },
+			{ component: { name: 'cores', style: 'rgb', type: 'blue' } },
+		],
 	},
 	{
-		id: '33',
+		_id: '33',
 		name: 'Lampada 3',
 		category: 'lampada',
 		favDisp: true,
-		dispProps: {
-			components: [
-				{ name: 'liga', style: 'switch', type: false },
-				{ name: 'intesidade', style: 'slider', type: 0 },
-				{ name: 'cores', style: 'rgb', type: 'blue' },
-			],
-		},
+		components: [
+			{ component: { name: 'liga', style: 'switch', type: false } },
+			{ component: { name: 'intesidade', style: 'slider', type: 0 } },
+			{ component: { name: 'cores', style: 'rgb', type: 'green' } },
+		],
 	},
 	{
-		id: '44',
+		_id: '44',
 		name: 'Lampada 4',
 		category: 'lampada',
 		favDisp: false,
-		dispProps: {
-			components: [
-				{ name: 'liga', style: 'switch', type: false },
-				{ name: 'intesidade', style: 'slider', type: 0 },
-				{ name: 'cores', style: 'rgb', type: 'green' },
-			],
-		},
+		components: [
+			{ component: { name: 'liga', style: 'switch', type: false } },
+			{ component: { name: 'intesidade', style: 'slider', type: 0 } },
+			{ component: { name: 'cores', style: 'rgb', type: 'yellow' } },
+		],
 	},
 	{
-		id: '55',
+		_id: '55',
 		name: 'Lampada 5',
 		category: 'lampada',
 		favDisp: true,
-		dispProps: {
-			components: [
-				{ name: 'liga', style: 'switch', type: false },
-				{ name: 'intesidade', style: 'slider', type: 0 },
-				{ name: 'cores', style: 'rgb', type: 'red' },
-			],
-		},
+		components: [
+			{ component: { name: 'liga', style: 'switch', type: false } },
+			{ component: { name: 'intesidade', style: 'slider', type: 0 } },
+			{ component: { name: 'cores', style: 'rgb', type: 'red' } },
+		],
 	},
 ];

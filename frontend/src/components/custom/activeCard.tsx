@@ -10,9 +10,9 @@ export function ActiveCard({ disp }: { disp: DispType }) {
 	return (
 		<>
 			<DropdownList className=" p-4 border">
-				{disp.dispProps.components.map((comp, index) => (
+				{disp.components.map(({ component }, index) => (
 					<DropdownItem key={index}>
-						<DropdownButton>{comp.name}</DropdownButton>
+						<DropdownButton>{component.name}</DropdownButton>
 					</DropdownItem>
 				))}
 			</DropdownList>

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 'use client';
-import { addDisp } from '@/data/dispData/dispActions';
+import { createDisp } from '@/data/dispData/dispActions';
 import { DispSchema, DispType, DispTypeProps } from '@/data/dispData/dispModel';
 
 import {
@@ -14,13 +14,13 @@ import {
 
 export type TypeDevicesContext = {
 	devices: DispType[];
-	selectedDispId: DispType['id'] | null;
+	selectedDispId: DispType['_id'] | null;
 	selectedDisp: DispTypeProps<DispType> | undefined;
 	setSelectedDisp: Dispatch<SetStateAction<DispTypeProps<DispType> | undefined>>;
-	handleAddDisp: (newDisp: DispType) => Promise<void>;
-	handleEditDisp: (dispId: DispType['id'], newDispData: DispType) => Promise<void>;
-	handleDeleteDisp: (dispId: DispType['id']) => Promise<void>;
-	handleChangeSelectedDispId: (id: DispType['id']) => void;
+	handleAddDisp: (newDisp: DispSchema) => Promise<void>;
+	handleEditDisp: (dispId: DispType['_id'], newDispData: DispType) => Promise<void>;
+	handleDeleteDisp: (dispId: DispType['_id']) => Promise<void>;
+	handleChangeSelectedDispId: (id: DispType['_id']) => void;
 };
 
 export const DevicesContext = createContext<TypeDevicesContext | null>(null);
@@ -39,25 +39,25 @@ export default function DevicesContextProvider({
 		isOpen: false,
 	});
 
-	const handleAddDisp = async (newDisp: DispType) => {
-		const session = await addDisp(newDisp);
+	const handleAddDisp = async (newDisp: DispSchema) => {
+		const session = await createDisp(newDisp);
 		console.log(session);
 	};
 
-	const handleEditDisp = async (dispId: DispType['id'], newDispData: DispType) => {
+	const handleEditDisp = async (dispId: DispType['_id'], newDispData: DispType) => {
 		console.log(dispId);
 	};
-	const handleDeleteDisp = async (dispId: DispType['id']) => {
+	const handleDeleteDisp = async (dispId: DispType['_id']) => {
 		console.log(dispId);
 	};
-	const handleChangeSelectedDispId = async (id: DispType['id']) => {
-		if (selectedDisp?.data?.id === id) {
+	const handleChangeSelectedDispId = async (id: DispType['_id']) => {
+		if (selectedDisp?.data?._id === id) {
 			setSelectedDisp({
 				data: undefined,
 				isOpen: false,
 			});
 		} else {
-			const dispFind = devices.find((device: DispType) => device.id === id);
+			const dispFind = devices.find((device: DispType) => device._id === id);
 			setSelectedDisp({ data: dispFind, isOpen: true });
 		}
 	};

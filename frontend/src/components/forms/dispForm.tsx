@@ -11,6 +11,7 @@ import { useState } from 'react';
 
 export default function DispForm() {
 	const { handleAddDisp } = useDevicesContext();
+	const [checkValue, setCheckValue] = useState(false);
 	const { register, getValues } = useForm<DispSchema>({ defaultValues: undefined });
 
 	return (
@@ -24,7 +25,7 @@ export default function DispForm() {
 				<div className="flex flex-col justify-center w-full h-fit">
 					<div className="flex flex-row justify-between">
 						<label className="self-center">
-							email
+							name
 							<Input
 								className="w-[320px]"
 								id="name"
@@ -36,19 +37,6 @@ export default function DispForm() {
 					</div>
 					<div className="flex flex-row justify-between">
 						<label className="self-center">
-							id
-							<Input
-								className="w-[320px]"
-								id="id"
-								type="text"
-								placeholder="id"
-								{...register('id')}
-							/>
-						</label>
-					</div>
-
-					<div className="flex flex-row justify-between">
-						<label className="self-center">
 							category
 							<Input
 								className="w-[320px]"
@@ -56,6 +44,19 @@ export default function DispForm() {
 								type="text"
 								placeholder="category"
 								{...register('category')}
+							/>
+						</label>
+					</div>
+					<div className="flex flex-row justify-between">
+						<label className="self-center">
+							favDisp
+							<Input
+								className="w-[320px]"
+								id="favDisp"
+								type="checkbox"
+								onClick={async () => setCheckValue(!checkValue)}
+								placeholder="favDisp"
+								{...register('favDisp')}
 							/>
 						</label>
 					</div>

@@ -1,12 +1,13 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
-import { DispCard } from './dispCard';
+
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../ui/card';
 import { useDevicesContext } from '@/contexts/items-context-provider';
 import { DispType } from '@/data/dispData/dispModel';
 import { DropdownButton, DropdownItem, DropdownList } from './dropdown';
 import { ActiveCard } from './activeCard';
+import Link from 'next/link';
 
 export default function DispositivosTemplate({ categoria }: { categoria?: string }) {
 	const router = useRouter();
@@ -15,7 +16,6 @@ export default function DispositivosTemplate({ categoria }: { categoria?: string
 		() => devices.filter((device: DispType) => device.category === categoria),
 		[categoria, devices]
 	);
-
 	if (!categoria) {
 		router.push('/dashboard');
 	}
@@ -29,16 +29,16 @@ export default function DispositivosTemplate({ categoria }: { categoria?: string
 					</CardHeader>
 					<CardContent className="w-full ">
 						{filterDisps.map((disp) => (
-							<DropdownList key={disp.id} className="p-4 border ">
-								<DropdownItem key={disp.id}>
+							<DropdownList key={disp._id} className="p-4 border ">
+								<DropdownItem key={disp._id}>
 									<DropdownButton
 										onClick={() => {
-											handleChangeSelectedDispId(disp.id);
+											handleChangeSelectedDispId(disp._id);
 										}}
 									>
 										{disp.name}
 									</DropdownButton>
-									{disp.id === selectedDisp?.data?.id && selectedDisp?.isOpen ? (
+									{disp._id === selectedDisp?.data?._id && selectedDisp?.isOpen ? (
 										<ActiveCard disp={selectedDisp.data} />
 									) : null}
 								</DropdownItem>
@@ -48,9 +48,11 @@ export default function DispositivosTemplate({ categoria }: { categoria?: string
 					<CardFooter className="relative" />
 				</Card>
 				<div className="absolute bottom-1 right-1 ">
-					<button className=" bg-indigo-400 rounded-full ring-2 ring-indigo-200 size-16 text-2xl text-sky-100">
-						+
-					</button>
+					<Link href="/dashboard/dispositivos/criar" replace>
+						<button className=" bg-indigo-400 rounded-full ring-2 ring-indigo-200 size-16 text-2xl text-sky-100">
+							+
+						</button>
+					</Link>
 				</div>
 			</div>
 		</>

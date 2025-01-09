@@ -29,7 +29,7 @@ export async function logoutUser() {
 		},
 	};
 	try {
-		const response = await fetch('http://backend-express:3001/api/auth/logoutall', headers);
+		const response = await fetch('http://localhost:3001/api/auth/logoutall', headers);
 		const data = await response.json();
 		if (response.ok) console.log('ok');
 		await signOut({ redirectTo: '/' });

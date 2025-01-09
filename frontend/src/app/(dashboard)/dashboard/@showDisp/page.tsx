@@ -18,7 +18,7 @@ export default function ShowDispPage() {
 					<h3>Dispositivos favoritos</h3>
 					<div className="flex flex-row flex-wrap content-around  bg-white gap-5 border-2 rounded-lg border-slate-300 justify-center ">
 						{favDisp?.map((disp) => (
-							<DispFavCard key={disp.id} textHeader={disp.name} imgType="img3" />
+							<DispFavCard key={disp._id} textHeader={disp.name} imgType="img3" />
 						))}
 					</div>
 				</div>
