@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'server-only';
 
 import { auth } from '@/lib/auth';
@@ -11,7 +12,7 @@ export async function checkAuth() {
 	return session;
 }
 
-async function fetchServerData(path?: string, method?: string, payload?: unknown) {
+export async function fetchServerData(path?: string, method?: string, payload?: any) {
 	const session = await checkAuth();
 
 	const options = {
@@ -20,10 +21,10 @@ async function fetchServerData(path?: string, method?: string, payload?: unknown
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${session?.accessToken}`,
 		},
+		body: payload ? JSON.stringify({ ...payload }) : undefined,
 	};
-
 	try {
-		const res = await fetch(`http://backend-express:3001${path}`, options);
+		const res = await fetch(`http://${process.env.BASE_URL}:3001${path}`, options);
 		const data = await res.json();
 		return data;
 	} catch (error) {
@@ -32,7 +33,7 @@ async function fetchServerData(path?: string, method?: string, payload?: unknown
 }
 export async function getAllUserDisp() {
 	const response = await fetchServerData('/dispositivos/allDisp', 'GET');
-	console.log(response.disps);
+
 	return response.disps;
 	//headers
 	// data

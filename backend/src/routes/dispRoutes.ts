@@ -31,8 +31,29 @@ router.post(
 				error: createdDisp.error,
 			});
 		}
-		console.log(createdDisp);
+
 		return res.status(200).json(createdDisp);
+	}
+);
+
+router.post(
+	"/editDisp",
+	auth,
+	async (req: CustomRequest, res: Response): Promise<any> => {
+		if (!req.user) {
+			return res.status(400).json({
+				error: "usuario inexistente",
+			});
+		}
+
+		const editedDisp = await editDisp(req.body.disp);
+		if (editedDisp?.error) {
+			return res.status(400).json({
+				error: editedDisp.error,
+			});
+		}
+		console.log(editedDisp);
+		return res.status(200).json(editedDisp);
 	}
 );
 
@@ -46,7 +67,7 @@ router.delete(
 			});
 		}
 		const disp: Partial<IDispositivo> = {
-			name: req.body.name,
+			_id: req.body.id,
 			userId: req.user.name,
 		};
 		const delDisp = await deleteDisp(disp);
@@ -56,7 +77,7 @@ router.delete(
 			});
 		}
 
-		return res.status(200).send(delDisp.message);
+		return res.status(200).send(delDisp);
 	}
 );
 

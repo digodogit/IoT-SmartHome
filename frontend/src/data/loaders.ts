@@ -13,7 +13,7 @@ export async function fetchUserLogout() {
 		},
 	};
 	try {
-		const res = await fetch('http://localhost:3001/api/auth/logoutall', headers);
+		const res = await fetch(`http://${process.env.BASE_URL}:3001/api/auth/logoutall`, headers);
 		const data = await res.json();
 		if (res.ok) {
 			await signOut({ redirectTo: 'http://localhost:3000' });

@@ -18,18 +18,19 @@ const createDisp = async (disp: Partial<IDispositivo>, userId: string) => {
 };
 //necessario arrumar o update para quando tiver dados provavelmente
 const editDisp = async (disp: Partial<IDispositivo>) => {
-	const { name, userId } = disp;
+	const { name, components } = disp;
 
-	const existingDisp = await Dispositivo.findOneAndUpdate(
-		{ name, userId },
-		disp
+	console.log(components);
+	const existingDisp = await Dispositivo.updateOne(
+		{ name: name },
+		{ $set: { ...disp } }
 	);
 	if (!existingDisp) {
 		return {
 			error: "Dispositivo não encontrado.",
 		};
 	}
-	await existingDisp.save();
+
 	return {
 		disp: existingDisp,
 	};
@@ -37,9 +38,9 @@ const editDisp = async (disp: Partial<IDispositivo>) => {
 
 //necessario arrumar o delete para quando tiver dados de fato
 const deleteDisp = async (disp: Partial<IDispositivo>) => {
-	const { name, userId } = disp;
+	const { _id, userId } = disp;
 
-	const existingDisp = await Dispositivo.findOneAndDelete({ name, userId });
+	const existingDisp = await Dispositivo.findOneAndDelete({ _id, userId });
 	if (!existingDisp) {
 		return {
 			error: "Dispositivo não encontrado.",

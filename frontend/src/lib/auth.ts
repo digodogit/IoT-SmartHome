@@ -4,6 +4,7 @@ import axios from 'axios';
 import type { Provider } from 'next-auth/providers';
 import { JWT } from 'next-auth/jwt';
 import { AdapterUser } from 'next-auth/adapters';
+import { userLogInSchema } from './user/userSchema';
 
 declare module 'next-auth' {
 	interface User {
@@ -32,16 +33,26 @@ const providers: Provider[] = [
 		},
 		authorize: async (credentials): Promise<null | User> => {
 			if (credentials === null) return null;
+			const validatedUserData = userLogInSchema.safeParse(credentials);
+			if (!validatedUserData.success) {
+				return null;
+			}
+
+			const { email, password } = validatedUserData.data;
 			try {
-				const res = await axios.post('http://backend-express:3001/api/auth/login', {
-					email: credentials?.email,
-					password: credentials.password,
+				const res = await fetch(`http://${process.env.BASE_URL}:3001/api/auth/login`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ email: email, password: password }),
 				});
 
-				if (res.data && res.data.token) {
+				const data = await res.json();
+				if (data && data.token) {
 					return {
-						user: res.data.user,
-						token: res.data.token,
+						user: data.user,
+						token: data.token,
 					};
 				}
 				return null;
@@ -57,6 +68,7 @@ export const { signIn, signOut, auth, handlers } = NextAuth({
 		maxAge: 2000,
 	},
 	providers,
+	secret: process.env.AUTH_SECRET,
 	pages: {
 		signIn: '/login',
 		signOut: '/logout',

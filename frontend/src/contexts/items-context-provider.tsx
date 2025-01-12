@@ -1,7 +1,13 @@
 /* eslint-disable prettier/prettier */
 'use client';
-import { createDisp } from '@/data/dispData/dispActions';
-import { DispSchema, DispType, DispTypeProps } from '@/data/dispData/dispModel';
+import { createDisp, deleteDisp, editDisp } from '@/data/dispData/dispActions';
+import {
+	DispCompType,
+	DispFormType,
+	DispSchema,
+	DispType,
+	DispTypeProps,
+} from '@/data/dispData/dispModel';
 
 import {
 	createContext,
@@ -12,15 +18,20 @@ import {
 	useState,
 } from 'react';
 
+// criar uma função para selecionar o component para poder edita-lo.
+// provavelmente ir pelo "selectedDisp" dar "find" no nome (id) e editar.
 export type TypeDevicesContext = {
 	devices: DispType[];
 	selectedDispId: DispType['_id'] | null;
 	selectedDisp: DispTypeProps<DispType> | undefined;
 	setSelectedDisp: Dispatch<SetStateAction<DispTypeProps<DispType> | undefined>>;
-	handleAddDisp: (newDisp: DispSchema) => Promise<void>;
-	handleEditDisp: (dispId: DispType['_id'], newDispData: DispType) => Promise<void>;
+	handleAddDisp: (newDisp: DispFormType) => Promise<void>;
+	handleEditDisp: (newDispData: DispFormType) => Promise<void>;
 	handleDeleteDisp: (dispId: DispType['_id']) => Promise<void>;
 	handleChangeSelectedDispId: (id: DispType['_id']) => void;
+	handleUpdateComponent: (
+		compData: DispCompType['data']
+	) => Promise<string | boolean | number | undefined>;
 };
 
 export const DevicesContext = createContext<TypeDevicesContext | null>(null);
@@ -39,16 +50,24 @@ export default function DevicesContextProvider({
 		isOpen: false,
 	});
 
-	const handleAddDisp = async (newDisp: DispSchema) => {
-		const session = await createDisp(newDisp);
-		console.log(session);
+	const handleAddDisp = async (newDisp: DispFormType) => {
+		const error = await createDisp(newDisp);
+		if (error) {
+			console.log(error.message);
+		}
 	};
 
-	const handleEditDisp = async (dispId: DispType['_id'], newDispData: DispType) => {
-		console.log(dispId);
+	const handleEditDisp = async (newDispData: DispFormType) => {
+		const error = await editDisp(newDispData);
+		if (error) {
+			console.log(error.message);
+		}
 	};
 	const handleDeleteDisp = async (dispId: DispType['_id']) => {
-		console.log(dispId);
+		const error = await deleteDisp(dispId);
+		if (error) {
+			console.log(error.message);
+		}
 	};
 	const handleChangeSelectedDispId = async (id: DispType['_id']) => {
 		if (selectedDisp?.data?._id === id) {
@@ -59,6 +78,17 @@ export default function DevicesContextProvider({
 		} else {
 			const dispFind = devices.find((device: DispType) => device._id === id);
 			setSelectedDisp({ data: dispFind, isOpen: true });
+		}
+	};
+
+	const handleUpdateComponent = async (compData: DispCompType['data']) => {
+		switch (compData?.dataType) {
+			case 'string':
+				return compData.dataValue;
+			case 'boolean':
+				return compData.dataValue === 'true' ? true : false;
+			case 'number':
+				return Number(compData.dataValue);
 		}
 	};
 	return (
@@ -72,6 +102,7 @@ export default function DevicesContextProvider({
 				handleEditDisp,
 				handleDeleteDisp,
 				handleChangeSelectedDispId,
+				handleUpdateComponent,
 			}}
 		>
 			{children}

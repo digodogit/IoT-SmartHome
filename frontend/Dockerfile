@@ -2,9 +2,9 @@ FROM node:22.9.0
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 
-EXPOSE 3001
+EXPOSE 3000
 
 CMD ["npm", "run", "dev"]

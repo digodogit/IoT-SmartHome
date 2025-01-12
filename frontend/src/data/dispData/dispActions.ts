@@ -1,38 +1,51 @@
 'use server';
 /* eslint-disable prettier/prettier */
-import { checkAuth } from '@/lib/server-utils';
+import { checkAuth, fetchServerData } from '@/lib/server-utils';
 import { revalidatePath } from 'next/cache';
+import { dispFormSchema } from './dispModel';
 
 // revalidatePath provavel ser necessario.
 
-async function editDisp(dispId: unknown, newDispData: unknown) {
+export async function editDisp(newDispData: unknown) {
 	//editar dispositivo
 	//como Nome, componentes, essas coisas
 	//fazer check para saber se pode editar é uma boa
+	const validatedDisp = dispFormSchema.safeParse(newDispData);
+	console.log(validatedDisp.data?.components);
+	if (!validatedDisp.success) {
+		return { message: 'dados para criar dispositivo invalido' };
+	}
+	const response = await fetchServerData('/dispositivos/editDisp', 'POST', {
+		disp: validatedDisp.data,
+	});
+
+	if (!response) {
+		return { message: 'dispositivo data invalido' };
+	}
+	revalidatePath('/dashboard', 'layout');
 }
 
-async function deleteDisp(dispId: unknown) {
+export async function deleteDisp(dispId: unknown) {
 	//deletar dispositivo
 	//fazer check para saber se pode editar é uma boa
+
+	const response = await fetchServerData('/dispositivos/deleteDisp', 'DELETE', { id: dispId });
+	if (!response) {
+		return { message: 'dispositivo data invalido' };
+	}
+	revalidatePath('/dashboard', 'layout');
 }
 
 export async function createDisp(disp: unknown) {
-	try {
-		const session = await checkAuth();
-		const headers = {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${session?.accessToken}`,
-			},
-			body: JSON.stringify(disp),
-		};
-		const res = await fetch('http://localhost:3001/dispositivos/createDisp', headers);
-		const data = await res.json();
-		console.log(data);
-	} catch (error) {
-		console.log('nao sei');
-		return error;
+	const validatedDisp = dispFormSchema.safeParse(disp);
+
+	if (!validatedDisp.success) {
+		return { message: 'dados para criar dispositivo invalido' };
+	}
+	const response = await fetchServerData('/dispositivos/createDisp', 'POST', validatedDisp.data);
+	console.log(validatedDisp.data);
+	if (!response) {
+		return { message: 'não foi possivel criar dispositivo' };
 	}
 	revalidatePath('/dashboard', 'layout');
 
