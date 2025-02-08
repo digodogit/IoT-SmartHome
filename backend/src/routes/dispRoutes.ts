@@ -24,6 +24,7 @@ router.post(
 			name: req.body.name,
 			category: req.body.category,
 			favDisp: req.body.favDisp,
+			components: req.body.components,
 		};
 		const createdDisp = await createDisp(newDisp, req.user.name);
 		if (createdDisp?.error) {

@@ -2,7 +2,7 @@ import User, { IUser } from "../models/User";
 import Dispositivo, { IDispositivo } from "../models/Dispositivos";
 
 const createDisp = async (disp: Partial<IDispositivo>, userId: string) => {
-	const { name, category, favDisp } = disp;
+	const { name, category, favDisp, components } = disp;
 
 	const existingDisp = await Dispositivo.findOne({ name, userId });
 	if (existingDisp) {
@@ -10,7 +10,12 @@ const createDisp = async (disp: Partial<IDispositivo>, userId: string) => {
 			error: "Nome de dispositivo já existente. Escolha outro.",
 		};
 	}
-	const newDisp = new Dispositivo({ name, category, userId, favDisp });
+	const newDisp = new Dispositivo({
+		name,
+		category,
+		userId,
+		favDisp,
+	});
 	await newDisp.save();
 	return {
 		disp: newDisp,
