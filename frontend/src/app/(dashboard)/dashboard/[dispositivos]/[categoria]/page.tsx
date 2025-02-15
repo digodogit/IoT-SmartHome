@@ -1,24 +1,12 @@
 "use server";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/atoms/Card";
-import { dispTest } from "@/data/dispData/dispDataTest";
+
 import { baseRoutes } from "@/data/pathRoutes/baseRoutes";
-import { getAllUserDisp } from "@/lib/server-utils";
-import { cn } from "@/lib/utils";
 import * as React from "react";
-import { Metadata } from "next";
-import DispositivosTemplate from "@/components/organisms/Dispositivos";
 import { redirect } from "next/navigation";
-import DispForm from "@/components/forms/DispForm";
 import Link from "next/dist/client/link";
 
 // Ainda em desenvolvimento
-// não está indo para o form para criar dispositivo da melhor forma
+
 export async function getDispParams(options: string, categoria?: string) {
   const optionsComp = baseRoutes.find(
     (parent) => parent.state === options,
@@ -46,14 +34,5 @@ export default async function Page({
     redirect("/dashboard");
   }
   // esse return tem q ser um component que recebe
-  return (
-    <>
-      <Link href={`/dashboard/${dispositivos}/${categoria}`}>
-        <button className=" bg-indigo-400 ring-1 ring-indigo-200 size-12 text-m text-sky-100">
-          voltar
-        </button>
-      </Link>
-      {component.element}
-    </>
-  );
+  return <>{component.element}</>;
 }

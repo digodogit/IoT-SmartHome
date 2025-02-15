@@ -35,8 +35,12 @@ export default function DispositivosTemplate({
     isFormOpen: false,
   });
   const router = useRouter();
-  const { devices, selectedDisp, handleChangeSelectedDispId } =
-    useDevicesContext();
+  const {
+    devices,
+    selectedDisp,
+    handleChangeSelectedDispId,
+    handleDeleteDisp,
+  } = useDevicesContext();
   const filterDisps = useMemo(
     () =>
       devices.filter((device: DispType) => device.category === categoria),
@@ -63,7 +67,15 @@ export default function DispositivosTemplate({
       ) : (
         <div className="relative w-fit">
           <Card className="relative p-2 w-[600px] rounded-xl border-2 border-slate-500 bg-white">
-            <CardHeader>
+            <CardHeader className="flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <Link href={`/dashboard/dispositivos/${categoria}`}>
+                  <button className="rounded-md bg-indigo-500 hover:bg-indigo-600 transition-colors px-4 py-2 text-sm text-white font-medium flex items-center gap-2">
+                    <span>←</span>
+                    Voltar
+                  </button>
+                </Link>
+              </div>
               <CardTitle className="py-2 border-b-2">
                 {categoria}
               </CardTitle>
@@ -85,18 +97,28 @@ export default function DispositivosTemplate({
                     {disp._id === selectedDisp?.data?._id &&
                       selectedDisp?.isOpen && (
                         <div className="py-2">
-                          <ActiveCard disp={selectedDisp.data} />
-                          <button
-                            onClick={async () =>
-                              setActionForm({
-                                actionType: "editar",
-                                isFormOpen: true,
-                              })
-                            }
-                            className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all w-[88px] h-[40px] shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
-                          >
-                            editar
-                          </button>
+                          <ActiveCard />
+                          <div className="flex justify-end py-1">
+                            <button
+                              onClick={async () =>
+                                setActionForm({
+                                  actionType: "editar",
+                                  isFormOpen: true,
+                                })
+                              }
+                              className="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all w-[88px] h-[40px] shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+                            >
+                              editar
+                            </button>
+                            <button
+                              onClick={async () =>
+                                handleDeleteDisp(selectedDisp.data._id)
+                              }
+                              className="rounded-md bg-red-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all w-[88px] h-[40px] shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+                            >
+                              deletar
+                            </button>
+                          </div>
                         </div>
                       )}
                   </DropdownItem>

@@ -9,16 +9,12 @@ import {
 import {
   DispCompType,
   DispFormType,
-  DispSchema,
   DispType,
   DispTypeProps,
 } from "@/data/dispData/dispModel";
 
 import {
-  Component,
   createContext,
-  Dispatch,
-  SetStateAction,
   useCallback,
   useContext,
   useOptimistic,
@@ -29,19 +25,18 @@ import {
 // provavelmente ir pelo "selectedDisp" dar "find" no nome (id) e editar.
 export type TypeDevicesContext = {
   devices: DispType[];
-
   selectedDisp: DispTypeProps<DispType> | null;
-  setSelectedDisp: Dispatch<
-    SetStateAction<DispTypeProps<DispType> | null>
-  >;
   handleAddDisp: (newDisp: DispFormType) => Promise<void>;
   handleEditDisp: (newDispData: DispFormType) => Promise<void>;
   handleDeleteDisp: (dispId: DispType["_id"]) => Promise<void>;
   handleChangeSelectedDispId: (id: DispType["_id"]) => void;
   handleUpdateComponent: (
-    compName: string,
+    componentName: string,
     newValue: string | boolean | number,
   ) => void;
+  handleDeleteComponent: (
+    componentName: DispCompType["name"],
+  ) => Promise<void>;
 };
 
 export const DevicesContext = createContext<TypeDevicesContext | null>(
@@ -85,9 +80,11 @@ export default function DevicesContextProvider({
         selectedDisp.isOpen
       ) {
         setSelectedDisp((prevState) => {
+          if (!prevState) return null;
           return {
             ...prevState,
             isOpen: false,
+            data: prevState.data,
           };
         });
       } else {
@@ -107,20 +104,39 @@ export default function DevicesContextProvider({
   );
 
   const handleUpdateComponent = async (
-    compName: string,
+    componentName: string,
     newValue: string | boolean | number,
   ) => {
     if (selectedDisp && selectedDisp.data.components) {
-      const disp = selectedDisp.data.components.map(
-        ({ component }, index, obj) => {
-          if (component.name === compName && component.data) {
-            component.data.value = newValue;
-          }
-          return { component: component };
-        },
-      );
+      const disp = selectedDisp.data.components.map(({ component }) => {
+        if (component.name === componentName && component.data) {
+          component.data.value = newValue;
+        }
+        return { component: component };
+      });
 
       setSelectedDisp((prevState) => {
+        if (!prevState) return null;
+        return {
+          ...prevState,
+          data: {
+            ...prevState.data,
+            components: disp,
+          },
+        };
+      });
+    }
+  };
+  const handleDeleteComponent = async (
+    componentName: DispCompType["name"],
+  ) => {
+    if (selectedDisp && selectedDisp.data.components) {
+      const disp = selectedDisp.data.components.filter(({ component }) => {
+        return component.name !== componentName;
+      });
+
+      setSelectedDisp((prevState) => {
+        if (!prevState) return null;
         return {
           ...prevState,
           data: {
@@ -136,12 +152,12 @@ export default function DevicesContextProvider({
       value={{
         devices,
         selectedDisp,
-        setSelectedDisp,
         handleAddDisp,
         handleEditDisp,
         handleDeleteDisp,
         handleChangeSelectedDispId,
         handleUpdateComponent,
+        handleDeleteComponent,
       }}
     >
       {children}

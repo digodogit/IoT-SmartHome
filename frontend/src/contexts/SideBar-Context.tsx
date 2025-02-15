@@ -1,15 +1,18 @@
+"use client";
 import * as React from "react";
 import { createContext } from "react";
 import { RouteType } from "@/data/pathRoutes/config";
-export interface OpenContextValue {
+export interface SideBarContextValue {
   isMenuOpen: boolean | null;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean | null>>;
   routeItem: RouteType[];
 }
 
-const OpenContext = createContext<OpenContextValue | undefined>(undefined);
+const SideBarContext = createContext<SideBarContextValue | undefined>(
+  undefined,
+);
 
-export function OpenContextProvider({
+export function SideBarContextProvider({
   items,
   children,
 }: {
@@ -21,7 +24,7 @@ export function OpenContextProvider({
   );
   const routeItem = items;
   return (
-    <OpenContext.Provider
+    <SideBarContext.Provider
       value={{
         isMenuOpen,
         setIsMenuOpen,
@@ -29,14 +32,16 @@ export function OpenContextProvider({
       }}
     >
       {children}
-    </OpenContext.Provider>
+    </SideBarContext.Provider>
   );
 }
 
 export const useSideBarContext = () => {
-  const openContext = React.useContext(OpenContext);
-  if (openContext === undefined) {
-    throw new Error("useOpenContext must be inside a OpenContextProvider");
+  const sideBarContext = React.useContext(SideBarContext);
+  if (sideBarContext === undefined) {
+    throw new Error(
+      "useSideBarContext must be inside a SideBarContextProvider",
+    );
   }
-  return openContext;
+  return sideBarContext;
 };
