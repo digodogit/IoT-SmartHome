@@ -1,0 +1,78 @@
+name: Semantic Release
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read # for checkout
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm install
+      - name: Get version from package.json before release step
+        id: initversion
+        run: |
+          version=$(npm run get-version --silent)
+          echo "version=v$version" >> $GITHUB_OUTPUT
+          echo "initVersion: $version"
+      - name: Release
+        id: semantic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          npx semantic-release | tee semantic-release.log
+          status=$?
+          if [ "$status" -eq 0 ]; then
+            if grep -q "Published release" semantic-release.log; then
+              echo "released=true" >> $GITHUB_OUTPUT
+              version=$(grep -oP 'Published release \K[0-9]+\.[0-9]+\.[0-9]+' semantic-release.log | tail -1)
+              echo "version=$version" >> $GITHUB_OUTPUT
+            else
+              echo "released=false" >> $GITHUB_OUTPUT
+            fi
+          elif [ "$status" -eq 1 ]; then
+            echo "released=false" >> $GITHUB_OUTPUT
+          else
+            exit "$status"
+          fi
+      - name: Get Info
+        run: |
+          echo "initVersion: ${{ steps.initversion.outputs.version }}"
+          echo "released: ${{ steps.semantic.outputs.released }}"
+          echo "version: ${{ steps.semantic.outputs.version }}"
+      - name: Create Pull Request with updated package files
+        id: cpr
+        if: steps.semantic.outputs.released == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: "chore(release): ${{ steps.semantic.outputs.version }}"
+          title: "chore(release): ${{ steps.semantic.outputs.version }}"
+          body: "Version bump in package.json for release [${{ steps.semantic.outputs.version }}](https://github.com/${{ github.repository }}/releases/tag/v${{ steps.semantic.outputs.version }})"
+          branch: version-bump/${{ steps.semantic.outputs.version }}
+          labels: "automerge"
+      - name: Enable Pull Request Automerge
+        if: steps.cpr.outputs.pull-request-number
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          token: ${{ secrets.GH_TOKEN }}
